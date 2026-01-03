@@ -1,0 +1,2 @@
+- pnpm add "@org/ui@workspace:*" -F seed-next-pages
+- pnpm dev --filter seed-next-pages
