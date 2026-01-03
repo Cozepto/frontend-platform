@@ -79,6 +79,15 @@ importers:
         specifier: ^5
         version: 5.9.2
 
+  packages/tokens:
+    devDependencies:
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(postcss@8.4.31)(typescript@5.9.2)(yaml@1.10.2)
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
+
   packages/ui:
     dependencies:
       '@emotion/cache':
@@ -99,6 +108,9 @@ importers:
       '@mui/system':
         specifier: ^6.5.0
         version: 6.5.0(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3)
+      '@org/tokens':
+        specifier: workspace:^
+        version: link:../tokens
       react:
         specifier: '>=18'
         version: 19.2.3
