@@ -3,7 +3,7 @@ import { BrandTokens } from "../types";
 export const defaultBrand: BrandTokens = {
   color: {
     intent: {
-      primary: "#2563EB",
+      primary: "#25eb95ff",
       success: "#16A34A",
       warning: "#D97706",
       danger: "#DC2626",

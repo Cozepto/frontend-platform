@@ -7,7 +7,7 @@ import { spawnSync } from "node:child_process";
 
 type Options = {
   brand: string;
-  template: string;
+  from: string;
   dest: string;
   noInstall?: boolean;
 };
@@ -25,8 +25,8 @@ program
   )
   .option("--brand <brand>", "Brand key (default|cozepto|edprinter)", "default")
   .option(
-    "--template <path>",
-    "Template path relative to repo root",
+    "--from <path>",
+    "Seed app path relative to repo root",
     "apps/seed-next-pages"
   )
   .option("--dest <path>", "Destination folder relative to repo root", "apps")
@@ -86,22 +86,17 @@ function setBrandFile(appPath: string, brand: string) {
   fs.writeFileSync(brandFile, content, "utf8");
 }
 
-function updateAppPackageJson(appPath: string, appName: string) {
-  const pkgPath = path.join(appPath, "package.json");
+function updateAppPackageJson(appRoot: string, appName: string) {
+  const pkgPath = path.join(appRoot, "package.json");
   const pkg = readJson(pkgPath);
 
-  // Keep it simple: package name equals folder name
   pkg.name = appName;
   pkg.private = true;
-
-  pkg.scripts = pkg.scripts ?? {};
-  pkg.scripts.dev = `next dev -p 30${Math.floor(Math.random() * 90 + 10)}`; // e.g. 3012
 
   pkg.dependencies = pkg.dependencies ?? {};
   pkg.dependencies["@org/ui"] = "workspace:*";
 
-  // Optional: ensure app has required emotion deps if your template didn’t include them
-  // (If template already includes, pnpm will keep versions)
+  // Ensure required deps exist (won't overwrite if already present)
   pkg.dependencies["@emotion/react"] =
     pkg.dependencies["@emotion/react"] ?? "^11.11.0";
   pkg.dependencies["@emotion/styled"] =
@@ -132,12 +127,12 @@ function main() {
   const opts = program.opts<Options>();
 
   const repoRoot = findRepoRoot(process.cwd());
-  const templatePath = path.join(repoRoot, opts.template);
+  const seedPath = path.join(repoRoot, opts.from);
   const destRoot = path.join(repoRoot, opts.dest);
   const appPath = path.join(destRoot, appName);
 
-  if (!fs.existsSync(templatePath)) {
-    throw new Error(`Template not found: ${templatePath}`);
+  if (!fs.existsSync(seedPath)) {
+    throw new Error(`Template not found: ${seedPath}`);
   }
   if (!fs.existsSync(destRoot)) {
     fs.mkdirSync(destRoot, { recursive: true });
@@ -150,7 +145,7 @@ function main() {
   console.log(`Destination:  ${path.relative(repoRoot, appPath)}`);
   console.log(`Brand:        ${opts.brand}\n`);
 
-  copyDir(templatePath, appPath);
+  copyDir(seedPath, appPath);
 
   removeIfExists(path.join(appPath, "node_modules"));
   removeIfExists(path.join(appPath, ".next"));

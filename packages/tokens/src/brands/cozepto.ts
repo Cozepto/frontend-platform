@@ -3,7 +3,7 @@ import { BrandTokens } from "../types";
 export const cozepto: BrandTokens = {
   color: {
     intent: {
-      primary: "#0EA5E9",
+      primary: "#e90e0eff",
       success: "#22C55E",
       warning: "#F59E0B",
       danger: "#EF4444",
